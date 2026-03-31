@@ -31,9 +31,12 @@ gem "bootsnap", ">= 1.4.4", require: false
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
+  gem "factory_bot_rails"
+  gem "faker"
   gem "pry-byebug" # コードを止めて中身を確認できる
   gem "pry-doc" # pry中からドキュメントを読める
   gem "pry-rails" # 標準の irb より便利な対話ツール
+  gem "rspec-rails", "~> 5.0"
   gem "rubocop-rails", require: false # Rails用のコード規約チェック
   gem "rubocop-rspec", require: false # テスト用のコード規約チェック
 end
