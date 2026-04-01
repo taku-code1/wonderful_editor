@@ -6,6 +6,7 @@ ruby "3.0.6"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 
 gem "active_model_serializers"
+gem "devise"
 gem "devise_token_auth"
 gem "matrix"
 gem "net-imap"
