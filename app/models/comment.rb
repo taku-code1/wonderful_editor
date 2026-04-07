@@ -12,4 +12,6 @@
 class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :article
+
+  validates :body, presence: { message: ": 内容を入力してください" }, length: { maximum: 200, message: ": 200文字以内で入力してください" }
 end

@@ -10,7 +10,8 @@
 #
 FactoryBot.define do
   factory :article_like do
-    user { nil }
-    article { nil }
+    # 関連付け：いいねを作るときに、自動でユーザーと記事も作成します
+    association :user
+    association :article
   end
 end
