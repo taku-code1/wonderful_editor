@@ -9,14 +9,13 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Comment, type: :model do
   let(:user) { create(:user) }
   let(:article) { create(:article) }
 
-  describe 'バリデーションのテスト' do
-
+  describe "バリデーションのテスト" do
     context "コメントがあり、200文字以内で書かれているとき" do
       it "有効であること" do
         comment = build(:comment, body: "a" * 200, user: user, article: article)

@@ -9,13 +9,12 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Article, type: :model do
   let(:user) { create(:user) }
 
-  describe 'バリデーションのテスト' do
-
+  describe "バリデーションのテスト" do
     context "タイトルがあり、30文字以内であるとき" do
       it "有効であること" do
         article = build(:article, title: "a" * 30, user: user)

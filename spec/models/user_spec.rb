@@ -1,8 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe User, type: :model do
   describe "バリデーションテスト" do
-
     context "名前が20字以内であるとき" do
       it "有効であること" do
         user = build(:user, name: "a" * 20)
@@ -33,7 +32,7 @@ RSpec.describe User, type: :model do
 
     context "メールアドレスが重複しているとき" do
       it "無効であること" do
-        create(:user, email: "test@example.com" )
+        create(:user, email: "test@example.com")
         user = build(:user, email: "test@example.com")
         expect(user).not_to be_valid
       end
