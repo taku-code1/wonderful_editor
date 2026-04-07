@@ -18,7 +18,7 @@ RSpec.describe ArticleLike, type: :model do
 
     context "同じ記事に同じユーザーがいいねしようとしたとき" do
       it "無効であること" do
-        create(article_like, user: user, article: article)
+        create(:article_like, user: user, article: article)
         article_like2 = build(:article_like, user: user, article: article)
         expect(article_like2).not_to be_valid
       end
