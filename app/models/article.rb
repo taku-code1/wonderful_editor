@@ -13,4 +13,7 @@ class Article < ApplicationRecord
   belongs_to :user
   has_many :comments, dependent: :destroy
   has_many :article_likes, dependent: :destroy
+
+  validates :title, presence: { message: ": 入力してください" }, length: { maximum: 30, message: "：30文字以内で入力してください" }
+  validates :body, presence: { message: ": 入力してください" }
 end

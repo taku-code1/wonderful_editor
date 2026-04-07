@@ -7,7 +7,7 @@ jobs:
       postgres:
         image: postgres:12
         ports:
-          - 5433:5432
+          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -32,14 +32,19 @@ jobs:
           bundle install --path vendor/bundle --jobs 4
       - name: Setup Database
         run: |
-          cp -v config/database.yml.ci config/database.yml
           bundle exec rails db:create
           bundle exec rails db:schema:load
         env:
           RAILS_ENV: test
+          POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
       - name: Rubocop
         run: bundle exec rubocop --parallel
       - name: RSpec
         run: bundle exec rspec
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
