@@ -11,10 +11,8 @@
 #
 FactoryBot.define do
   factory :comment do
-    # 本文：1〜200文字の範囲でランダムに生成（モデルの制限に合わせました）
-    body { Faker::Lorem.characters(number: Random.new.rand(1..200)) }
-
-    # 関連付け：コメントを作成するときに、自動でユーザーと記事も作成される。
+    body { Faker::Lorem.sentence }
+    # 以下の2行を書くと、userとarticleを作って紐付けをしてくれる。
     association :user
     association :article
   end

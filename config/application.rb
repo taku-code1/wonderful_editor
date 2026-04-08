@@ -49,5 +49,6 @@ module WonderfulEditor
     end
 
     config.api_only = true
+    config.i18n.default_locale = :ja
   end
 end
