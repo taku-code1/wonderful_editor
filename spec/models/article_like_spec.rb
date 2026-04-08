@@ -15,7 +15,6 @@ RSpec.describe ArticleLike, type: :model do
   let(:article) { create(:article) }
 
   describe "バリデーションのテスト" do
-
     context "いいねしていない記事にいいねしたとき" do
       it "有効であること" do
         article_like = build(:article_like, user: user, article: article)

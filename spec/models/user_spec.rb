@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   describe "バリデーションテスト" do
-
     context "名前が20字以内であるとき" do
       it "有効であること" do
         user = build(:user, name: "a" * 20)
