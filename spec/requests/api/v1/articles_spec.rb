@@ -150,6 +150,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
   describe "DELETE /api/v1/articles/:id" do
     subject { delete(api_v1_article_path(article.id)) }
+
     # paramsは不要 (titleやbodyは準備不要)
     # 「削除」という命令を出すだけで中身を書き換えるわけではないため。
     # let(:article) { create(:article, user: current_user) }←※正常系テストでit文の上に記載するから不要（二重定義になる）

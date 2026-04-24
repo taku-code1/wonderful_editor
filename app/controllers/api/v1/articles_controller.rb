@@ -47,8 +47,8 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
 
   private
 
-  # 許可するパラメーターを制限（ストロングパラメーター）
-  def article_params
-    params.require(:article).permit(:title, :body)
-  end
+    # 許可するパラメーターを制限（ストロングパラメーター）
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
 end
