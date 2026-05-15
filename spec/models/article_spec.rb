@@ -1,14 +1,3 @@
-# == Schema Information
-#
-# Table name: articles
-#
-#  id         :bigint           not null, primary key
-#  title      :string
-#  body       :text
-#  user_id    :bigint           not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
 require "rails_helper"
 
 RSpec.describe Article, type: :model do
@@ -47,6 +36,35 @@ RSpec.describe Article, type: :model do
       it "無効であること" do
         article = build(:article, body: nil, user: user)
         expect(article).not_to be_valid
+      end
+    end
+  end
+
+  describe "正常系" do
+    context "タイトルと本文があるとき" do
+      let(:article) { build(:article) }
+
+      it "下書き状態の記事が作成できる" do
+        expect(article).to be_valid
+        expect(article.status).to eq "draft"
+      end
+    end
+
+    context "statusが下書き状態のとき" do
+      let(:article) { build(:article, :draft) }
+
+      it "下書き状態の記事が作成できる" do
+        expect(article).to be_valid
+        expect(article.status).to eq "draft"
+      end
+    end
+
+    context "statusが公開状態のとき" do
+      let(:article) { build(:article, :published) }
+
+      it "公開状態の記事が作成できる" do
+        expect(article).to be_valid
+        expect(article.status).to eq "published"
       end
     end
   end
