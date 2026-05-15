@@ -14,6 +14,9 @@ class Article < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :article_likes, dependent: :destroy
 
+  enum status: { draft: "draft", published: "published" }
+
+  validates :status, presence: true
   validates :title, presence: { message: ": 入力してください" }, length: { maximum: 30, message: "：30文字以内で入力してください" }
   validates :body, presence: { message: ": 入力してください" }
 end
