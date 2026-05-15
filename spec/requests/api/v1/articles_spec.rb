@@ -7,38 +7,22 @@ RSpec.describe "Api::V1::Articles", type: :request do
     subject { get(api_v1_articles_path) }
 
     # 並び順をテストする際は、比較対象のデータが必要
-    let!(:article1) { create(:article, updated_at: 1.days.ago) }
-    let!(:article2) { create(:article, updated_at: 2.days.ago) }
-    let!(:article3) { create(:article) }
+    let!(:article1) { create(:article, :published, updated_at: 1.days.ago) }
+    let!(:article2) { create(:article, :published, updated_at: 2.days.ago) }
+    let!(:article3) { create(:article, :published) }
 
-    it "ログインしていなくても（誰でも）、記事一覧を取得できること" do
+    # コントローラーでstatusが公開のものしか通さないフィルターをかけた。下書き記事は通さない証明となる。
+    before { create(:article, :draft) }
+
+    it "記事一覧を取得できること" do
       subject
+      res = JSON.parse(response.body)
+
       expect(response).to have_http_status(:ok) # ステータスコードは200であること
-    end
-
-    it "サーバーから返ってきた記事が3つあること" do
-      subject
-      res = JSON.parse(response.body)
       expect(res.length).to eq 3
-    end
-
-    it "記事が更新順に並んでいること" do
-      subject
-      res = JSON.parse(response.body)
       expect(res.map {|d| d["id"] }).to eq [article3.id, article1.id, article2.id]
-    end
-
-    it "記事の一覧機能のレスポンスには本文が含まれていないこと" do
-      subject
-      res = JSON.parse(response.body)
       expect(res[0].keys).to eq ["id", "title", "updated_at", "user"]
       expect(res[0].keys).not_to include("body")
-    end
-
-    it "投稿者の情報が含まれていること" do
-      subject
-      res = JSON.parse(response.body)
-      # UserSerializerが正しく動いているかチェック
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
     end
   end
@@ -48,21 +32,32 @@ RSpec.describe "Api::V1::Articles", type: :request do
   describe "GET /api/v1/articles/:id" do
     subject { get(api_v1_article_path(article_id)) }
 
-    context "指定したidの記事が存在する場合" do
-      let(:article) { create(:article) }
+    context "指定したidの記事が存在して" do
       let(:article_id) { article.id }
 
-      it "記事の詳細が取得できる" do
-        subject
-        res = JSON.parse(response.body)
+      context "その記事が公開中である場合" do
+        let(:article) { create(:article, :published) }
 
-        expect(response).to have_http_status(:ok)
-        expect(res["id"]).to eq article.id
-        expect(res["title"]).to eq article.title
-        expect(res["body"]).to eq article.body
-        expect(res["updated_at"]).to be_present
-        expect(res["user"]["id"]).to eq article.user.id
-        expect(res["user"].keys).to eq ["id", "name", "email"]
+        it "記事の詳細が取得できる" do
+          subject
+          res = JSON.parse(response.body)
+
+          expect(response).to have_http_status(:ok)
+          expect(res["id"]).to eq article.id
+          expect(res["title"]).to eq article.title
+          expect(res["body"]).to eq article.body
+          expect(res["updated_at"]).to be_present
+          expect(res["user"]["id"]).to eq article.user.id
+          expect(res["user"].keys).to eq ["id", "name", "email"]
+        end
+      end
+
+      context "その記事が下書きである場合" do
+        let(:article) { create(:article, :draft) }
+
+        it "記事が見つからない" do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+        end
       end
     end
 
@@ -76,22 +71,35 @@ RSpec.describe "Api::V1::Articles", type: :request do
   end
 
   describe "POST /api/v1/articles" do
-    subject { post(api_v1_articles_path, params: params) }
+    subject { post(api_v1_articles_path, params: params, headers: headers) }
 
-    let(:params) { { article: attributes_for(:article) } }
     let(:current_user) { create(:user) }
+    let(:headers) { current_user.create_new_auth_token }
 
-    # スタブの設定
-    before do
-      allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)
+    context "公開を指定して記事作成するとき" do
+      let(:params) { { article: attributes_for(:article, :published) } }
+
+      it "記事のレコードが作成できる" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "published"
+        expect(response).to have_http_status(:ok)
+      end
     end
 
-    it "記事を作成できる" do
-      expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
-      res = JSON.parse(response.body)
-      expect(res["title"]).to eq params[:article][:title]
-      expect(res["body"]).to eq params[:article][:body]
-      expect(response).to have_http_status(:ok)
+    context "下書きを指定して記事作成するとき" do
+      let(:params) { { article: attributes_for(:article, :draft) } }
+
+      it "下書き記事を作成できる" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "draft"
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     context "不適切なパラメーターを送信したとき" do
@@ -103,32 +111,40 @@ RSpec.describe "Api::V1::Articles", type: :request do
         expect(response).to have_http_status(:unprocessable_entity) # 422エラーが返るか
       end
     end
+
+    context "でたらめな指定で記事を作成するとき" do
+      let(:params) { { article: attributes_for(:article, status: :foo) } }
+
+      it "エラーになる" do
+        expect { subject }.to raise_error(ArgumentError)
+      end
+    end
   end
 
-  describe "PATCH /api/v1/articles" do
-    subject { patch(api_v1_article_path(article), params: params) }
+  describe "PATCH /api/v1/articles/:id" do
+    subject { patch(api_v1_article_path(article.id), params: params, headers: headers) }
 
-    let(:params) { { article: { title: "タイトル更新", body: "本文更新" } } }
+    let(:params) { { article: attributes_for(:article, :published) } }
     let(:current_user) { create(:user) }
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    let(:headers) { current_user.create_new_auth_token }
 
-    context "記事を更新するとき" do
+    context "自分の下書き記事を更新するとき" do
       # 自分の記事を準備
-      let(:article) { create(:article, user: current_user) }
+      let!(:article) { create(:article, :draft, user: current_user) }
 
       it "正常に更新できる" do
-        subject
-        res = JSON.parse(response.body)
-
-        expect(res["title"]).to eq "タイトル更新"
-        expect(res["body"]).to eq "本文更新"
+        expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
+                              change { article.reload.body }.from(article.body).to(params[:article][:body]) &
+                              change { article.reload.status }.from(article.status).to(params[:article][:status].to_s)
         expect(response).to have_http_status(:ok)
       end
     end
 
     context "他のユーザーの記事を更新しようとしたとき" do
       # 他人の記事を準備
-      let(:article) { create(:article) }
+      let(:other_user) { create(:user) }
+      # その「他人」を作者にして記事を作成
+      let!(:article) { create(:article, user: other_user) }
 
       it "更新失敗すること" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
@@ -136,9 +152,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
     end
 
     context "不適切なパラメータを送信したとき" do
-      # 空のデータを送る
+      # 空のデータを用意
       let(:params) { { article: { title: "", body: "" } } }
-      # 自分の記事を送る
+      # 自分の記事を用意
       let(:article) { create(:article, user: current_user) }
 
       it "更新に失敗すること" do
@@ -149,13 +165,15 @@ RSpec.describe "Api::V1::Articles", type: :request do
   end
 
   describe "DELETE /api/v1/articles/:id" do
-    subject { delete(api_v1_article_path(article.id)) }
+    subject { delete(api_v1_article_path(article_id), headers: headers) }
 
     # paramsは不要 (titleやbodyは準備不要)
     # 「削除」という命令を出すだけで中身を書き換えるわけではないため。
     # let(:article) { create(:article, user: current_user) }←※正常系テストでit文の上に記載するから不要（二重定義になる）
     let(:current_user) { create(:user) }
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    # 記事からidだけを控えたメモ。記事を消してもメモは残るから「どの記事消したんだっけ？」とならずに済む。
+    let(:article_id) { article.id }
+    let(:headers) { current_user.create_new_auth_token }
 
     context "記事を削除するとき" do
       let!(:article) { create(:article, user: current_user) }
