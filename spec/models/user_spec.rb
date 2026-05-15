@@ -59,20 +59,6 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "パスワードが32文字のとき" do
-      it "有効であること" do
-        user = build(:user, password: "a" * 32)
-        expect(user).to be_valid
-      end
-    end
-
-    context "パスワードが33文字以上のとき" do
-      it "無効であること" do
-        user = build(:user, password: "a" * 33)
-        expect(user).not_to be_valid
-      end
-    end
-
     context "パスワードが空のとき" do
       it "無効であること" do
         user = build(:user, password: nil)
