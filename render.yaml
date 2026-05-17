@@ -10,12 +10,16 @@ services:
     buildCommand: RAILS_ENV=production NODE_ENV=production ./bin/render-build.sh
     startCommand: bundle exec puma -C config/puma.rb
     envVars:
-      - key: RAILS_MASTER_KEY
-        sync: false
-      - key: DATABASE_URL
-        fromDatabase:
-          name: postgresql-wonderful-editor
-          property: connectionString
+    - key: RAILS_ENV
+      value: production
+    - key: NODE_ENV
+      value: production
+    - key: RAILS_MASTER_KEY
+      sync: false
+    - key: DATABASE_URL
+      fromDatabase:
+        name: postgresql-wonderful-editor
+        property: connectionString
     autoDeploy: false
 
 databases:
