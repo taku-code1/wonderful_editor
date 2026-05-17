@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 
-# Webpackerが古いRubyでクラッシュするのを防ぐ魔法の1行
-require 'io/console'
-
-ENV["RAILS_ENV"] ||= ENV["RACK_ENV"] || "development"
-ENV["NODE_ENV"]  ||= "development"
+# Renderのビルド時に環境を強制固定してバグを防ぐ
+ENV["RAILS_ENV"] = "production"
+ENV["NODE_ENV"] = "production"
 
 require "pathname"
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", Pathname.new(__FILE__).realpath)
