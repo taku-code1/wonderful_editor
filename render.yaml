@@ -7,7 +7,7 @@ services:
     branch: main
     numInstances: 1
     healthCheckPath: /
-    buildCommand: ./bin/render-build.sh
+    buildCommand: RAILS_ENV=production NODE_ENV=production ./bin/render-build.sh
     startCommand: bundle exec puma -C config/puma.rb
     envVars:
       - key: RAILS_MASTER_KEY
