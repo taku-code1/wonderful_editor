@@ -1,3 +1,4 @@
+ENV["RAILS_ENV"] ||= "production"
 # 1. 何よりも先に、Ruby標準のLoggerを強制ロードする
 require "logger"
 
