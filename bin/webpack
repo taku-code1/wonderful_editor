@@ -9,7 +9,9 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile",
 
 require "bundler/setup"
 
-require "active_support/core_ext/object/blank"
+require "active_support"
+require "active_support/core_ext"
+
 require "webpacker"
 require "webpacker/webpack_runner"
 
