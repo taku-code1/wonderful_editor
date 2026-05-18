@@ -1,18 +1,18 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-ENV["RAILS_ENV"] ||= ENV["RACK_ENV"] || "development"
-ENV["NODE_ENV"]  ||= "development"
+require "forwardable"
+require "unbundled_env"
 
-require "pathname"
-ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile",
-  Pathname.new(__FILE__).realpath)
+# 🔴 ここが最重要：Loggerのバグを回避する記述を追加
+require "logger"
 
-require "bundler/setup"
+ENV["RAILS_ENV"] ||= "development"
+ENV["NODE_ENV"] ||= ENV["RAILS_ENV"]
 
-require "webpacker"
-require "webpacker/webpack_runner"
+# 環境変数をアンバンドルしてwebpackを実行する
+ENV.replace(ENV.unbundled_env)
 
-APP_ROOT = File.expand_path("..", __dir__)
-Dir.chdir(APP_ROOT) do
-  Webpacker::WebpackRunner.run(ARGV)
+Dir.chdir(File.expand_index("..", __dir__)) do
+  exec "yarn run webpack --config config/webpack/development.js"
 end
