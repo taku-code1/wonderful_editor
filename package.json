@@ -40,6 +40,6 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "build": "echo 'Skip Webpacker compile on Render'"
+    "build": "bundle exec rails webpacker:compile"
   }
 }
