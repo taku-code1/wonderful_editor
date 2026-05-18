@@ -1,2 +1,5 @@
 #!/usr/bin/env ruby
-load File.expand_path("../node_modules/webpacker/exe/webpack", __dir__) rescue load File.expand_path("../vendor/bundle/ruby/3.1.0/gems/webpacker-5.4.4/exe/webpack", __dir__)
+# frozen_string_literal: true
+
+require "webpacker"
+require "webpacker/runner"

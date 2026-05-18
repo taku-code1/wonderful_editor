@@ -34,7 +34,7 @@
     "node-sass": "npm:sass@^1.32.0"
   },
   "engines": {
-    "node": "12.X",
+    "node": "16.20.2",
     "yarn": "1.x"
   }
 }
