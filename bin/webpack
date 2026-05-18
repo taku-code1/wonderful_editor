@@ -1,12 +1,2 @@
 #!/usr/bin/env ruby
-# frozen_string_literal: true
-
-require "logger"
-
-# Webpacker標準の起動ロジック
-$stdout.sync = true
-
-require "webpacker"
-require "webpacker/runner"
-
-Webpacker::Runner.run(ARGV)
+load File.expand_path("../node_modules/webpacker/exe/webpack", __dir__) rescue load File.expand_path("../vendor/bundle/ruby/3.1.0/gems/webpacker-5.4.4/exe/webpack", __dir__)
