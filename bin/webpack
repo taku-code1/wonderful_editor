@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
 
-# Renderのビルド時に環境を強制固定してバグを防ぐ
-ENV["RAILS_ENV"] = "production"
-ENV["NODE_ENV"] = "production"
+ENV["RAILS_ENV"] ||= ENV["RACK_ENV"] || "development"
+ENV["NODE_ENV"]  ||= "development"
 
 require "pathname"
-ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", Pathname.new(__FILE__).realpath)
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile",
+  Pathname.new(__FILE__).realpath)
 
 require "bundler/setup"
+
 require "webpacker"
 require "webpacker/webpack_runner"
 
