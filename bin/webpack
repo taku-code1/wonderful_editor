@@ -2,4 +2,11 @@
 # frozen_string_literal: true
 
 require "logger"
-load File.expand_path("../node_modules/webpacker/exe/webpack", __dir__)
+
+# Webpacker標準の起動ロジック
+$stdout.sync = true
+
+require "webpacker"
+require "webpacker/runner"
+
+Webpacker::Runner.run(ARGV)
