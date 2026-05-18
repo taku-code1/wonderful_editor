@@ -3,6 +3,8 @@
 set -o errexit
 
 bundle install
+yarn install --check-files
+bundle exec rails webpacker:compile
 bundle exec rails webpacker:compile
 bundle exec rake assets:precompile
 bundle exec rake assets:clean
