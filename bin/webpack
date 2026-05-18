@@ -1,18 +1,5 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "forwardable"
-require "unbundled_env"
-
-# 🔴 ここが最重要：Loggerのバグを回避する記述を追加
 require "logger"
-
-ENV["RAILS_ENV"] ||= "development"
-ENV["NODE_ENV"] ||= ENV["RAILS_ENV"]
-
-# 環境変数をアンバンドルしてwebpackを実行する
-ENV.replace(ENV.unbundled_env)
-
-Dir.chdir(File.expand_index("..", __dir__)) do
-  exec "yarn run webpack --config config/webpack/development.js"
-end
+load File.expand_path("../node_modules/webpacker/exe/webpack", __dir__)
