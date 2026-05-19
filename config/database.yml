@@ -16,6 +16,7 @@ test:
   database: wonderful_editor_test
 
 production:
-  <<: *default
-  database: wonderful_editor_production
-  password: <%= ENV['WONDERFUL-EDITOR_DATABASE_PASSWORD'] %>
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV['DATABASE_URL'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
