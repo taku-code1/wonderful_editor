@@ -10,7 +10,7 @@ WORKDIR /myapp
 
 # Gemfileだけコピーし、コンテナ内部だけで独立してインストール
 COPY Gemfile /myapp/Gemfile
-RUN gem install rails -v 6.1.7.3 && bundle install
+RUN gem install rails -v 6.1.7.10 && bundle install
 
 # 最後にファイルをコピー
 COPY . /myapp
