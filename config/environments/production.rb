@@ -119,5 +119,4 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   config.hosts.clear
   config.hosts << /.*/
-  config.public_file_server.enabled = true
 end
