@@ -36,10 +36,13 @@
     "node-sass": "npm:sass@^1.32.0"
   },
   "engines": {
-    "node": "16.x",
+    "node": "18.x",
     "yarn": "1.x"
   },
   "scripts": {
     "build": "bundle exec rails webpacker:compile"
+  },
+  "overrides": {
+    "minimatch": "9.0.5"
   }
 }
