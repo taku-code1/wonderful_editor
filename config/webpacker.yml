@@ -89,6 +89,6 @@ production:
   compile: true
   # Extract and emit a css file
   extract_css: false
-
+  public_output_path: packs
   # Cache manifest.json for performance
   cache_manifest: true
