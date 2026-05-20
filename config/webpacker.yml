@@ -85,10 +85,5 @@ test:
 
 production:
   <<: *default
-  # Production depends on precompilation of packs prior to booting for performance.
-  compile: true
-  # Extract and emit a css file
-  extract_css: false
+  compile: false  # ← ここは false のままでOKです
   public_output_path: packs
-  # Cache manifest.json for performance
-  cache_manifest: true
