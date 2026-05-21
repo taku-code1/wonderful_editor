@@ -5,10 +5,11 @@ require("channels")
 
 import Vue from 'vue/dist/vue.esm'
 import App from '../app.vue'
+import vuetify from '../plugins/vuetify'
 
 document.addEventListener('DOMContentLoaded', () => {
-  const app = new Vue({
+  new Vue({
+    vuetify,
     render: h => h(App)
-  }).$mount()
-  document.body.appendChild(app.$el)
+  }).$mount('#app')
 })
