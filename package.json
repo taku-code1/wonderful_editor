@@ -33,10 +33,11 @@
     "webpack-dev-server": "^3.11.0"
   },
   "resolutions": {
-    "node-sass": "npm:sass@^1.32.0"
+  "minimatch": "9.0.5",
+  "node-sass": "npm:sass@^1.32.0"
   },
   "engines": {
-    "node": "14.x",
+    "node": "18.x",
     "yarn": "1.x"
   },
   "scripts": {
