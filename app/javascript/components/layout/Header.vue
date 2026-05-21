@@ -43,7 +43,7 @@
 import axios from "axios";
 import Router from "../../router/router";
 
-const headers = {
+const headers = () => ({
   headers: {
     Authorization: "Bearer",
     "Access-Control-Allow-Origin": "*",
@@ -51,7 +51,7 @@ const headers = {
     client: localStorage.getItem("client"),
     uid: localStorage.getItem("uid")
   }
-};
+});
 
 export default {
   data() {
@@ -85,7 +85,7 @@ export default {
   methods: {
     async logout() {
       await axios
-        .delete("/api/v1/auth/sign_out", headers)
+        .delete("/api/v1/auth/sign_out", headers())
         .then(_response => {
           this.refresh();
         })
