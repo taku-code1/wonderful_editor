@@ -85,5 +85,5 @@ test:
 
 production:
   <<: *default
-  compile: true  # ← ここは false のままでOKです
+  compile: false  # ← ここは false のままでOKです
   public_output_path: packs
