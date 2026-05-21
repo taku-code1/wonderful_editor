@@ -85,5 +85,6 @@ test:
 
 production:
   <<: *default
-  compile: false  # ← ここは false のままでOKです
-  public_output_path: packs
+  compile: true
+  extract_css: false
+  cache_manifest: false
