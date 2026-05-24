@@ -12,7 +12,7 @@
         placeholder="Markdown で記述することができます"
         class="body-form"
       ></v-textarea>
-      <div v-html="compiledMarkdown(this.body)" class="preview">a</div>
+      <div v-html="compiledMarkdown(this.body)" class="preview"></div>
     </div>
     <div class="create_btn_area">
       <v-btn
