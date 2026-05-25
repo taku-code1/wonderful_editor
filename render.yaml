@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: wonderful_editor
+    env: ruby
+    region: singapore
+    plan: free
+
+    buildCommand: |
+      yarn install --ignore-engines
+      bundle install
+      bundle exec rails assets:precompile
+
+    startCommand: bundle exec rails s -p 10000 -b 0.0.0.0
+
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
