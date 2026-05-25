@@ -2,11 +2,26 @@ services:
   - type: web
     name: wonderful-editor
     env: ruby
-    buildCommand: |
-      nvm install 20.18.0
-      nvm use 20.18.0
-      node -v
-      yarn install --ignore-engines
-      bundle install
-      bundle exec rails assets:precompile
-    startCommand: bundle exec rails server -b 0.0.0.0
+    region: singapore
+    plan: free
+    branch: master
+    numInstances: 1
+    healthCheckPath: /
+    buildCommand: ./bin/render-build.sh
+    startCommand: bundle exec puma -C config/puma.rb
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgresql-wonderful-editor
+          property: connectionString
+    autoDeploy: false
+
+databases:
+  - name: postgresql-wonderful-editor
+    region: singapore
+    plan: free
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere # 学習用
