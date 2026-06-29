@@ -12,7 +12,7 @@
           </template>
           <template v-else>
             <v-list-item-avatar size="50px" color="#3085DE">
-              <span class="avatar-icon">👤</span>
+              <v-icon x-large color="#fff">mdi-account</v-icon>
             </v-list-item-avatar>
           </template>
 
@@ -31,12 +31,6 @@
               ></time-ago>
             </v-list-item-subtitle>
           </v-list-item-content>
-          <v-btn color="primary" small class="mr-3" @click="moveToEditPage(article.id)">
-            編集
-          </v-btn>
-          <v-btn color="error" small @click="confirmDeleteArticle(article.id)">
-            削除
-          </v-btn>
         </v-list-item>
         <v-divider></v-divider>
       </div>
@@ -85,22 +79,9 @@ export default {
 
     moveToEditPage(id) {
       Router.push(`/articles/drafts/${id}/edit`);
-    },
-
-    async confirmDeleteArticle(id) {
-      const result = confirm("この下書きを削除してもよろしいですか？");
-      if (result) {
-        await axios
-          .delete(`/api/v1/articles/${id}`, headers)
-          .then(_response => {
-            this.articles = this.articles.filter(article => article.id !== id);
-          })
-          .catch(e => {
-            alert(e.response.statusText);
-          });
-      }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -116,10 +97,5 @@ export default {
   a:visited {
     color: #777;
   }
-}
-
-.avatar-icon {
-  font-size: 26px;
-  line-height: 1;
 }
 </style>
