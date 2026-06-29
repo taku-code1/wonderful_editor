@@ -3,13 +3,17 @@
     <div class="article_detail">
       <v-layout xs-12 class="top-info-container">
         <v-avatar color="primary" size="x-large" class="mr-3">
-          <v-icon dark>mdi-account</v-icon>
+          <span class="avatar-icon">👤</span>
         </v-avatar>
         <span class="user-name">@{{ article.user.name }}</span>
         <time-ago :refresh="60" :datetime="article.updated_at" locale="en" tooltip="top" long></time-ago>
         <v-spacer></v-spacer>
-        <v-icon color="#3085DE" @click="moveToEditArticlePage(article.id)" class="mr-5">mdi-pencil</v-icon>
-        <v-icon color="#3085DE" @click="confirmDeleteArticle">mdi-delete</v-icon>
+        <v-btn color="primary" small class="mr-3" @click="moveToEditArticlePage(article.id)">
+          編集
+        </v-btn>
+        <v-btn color="error" small @click="confirmDeleteArticle">
+          削除
+        </v-btn>
       </v-layout>
       <v-layout>
         <h1 class="article-title">{{ article.title }}</h1>
@@ -143,5 +147,10 @@ export default {
 }
 .user-name {
   margin-right: 1em;
+}
+
+.avatar-icon {
+  font-size: 26px;
+  line-height: 1;
 }
 </style>

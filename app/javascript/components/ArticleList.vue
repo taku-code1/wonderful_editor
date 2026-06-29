@@ -11,7 +11,7 @@
           </template>
           <template v-else>
             <v-list-item-avatar size="50px" color="#3085DE">
-              <v-icon x-large color="#fff">mdi-account</v-icon>
+              <span class="avatar-icon">👤</span>
             </v-list-item-avatar>
           </template>
 
@@ -80,5 +80,10 @@ export default {
   a:visited {
     color: #777;
   }
+}
+
+.avatar-icon {
+  font-size: 26px;
+  line-height: 1;
 }
 </style>
